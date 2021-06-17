@@ -3,6 +3,9 @@ package com.priya.springweb.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +29,7 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value="/products/{id}",method=RequestMethod.GET)
+	@Cacheable(value="product-cache",key="#id")
 	public Product getProductById(@PathVariable("id") int id) {
 		
 		return repository.findById(id).get();
@@ -46,6 +50,7 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value="/products/{id}",method=RequestMethod.DELETE)
+	@CacheEvict(value="product-cache",key="#id")
 	public void  deleteProduct(@PathVariable("id") int id) {
 		
 	repository.deleteById(id);
